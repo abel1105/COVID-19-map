@@ -16,9 +16,16 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
-    "d3": "^5.15.0",
+    "d3-drag": "^1.2.5",
+    "d3-fetch": "^1.1.2",
+    "d3-format": "^1.4.3",
     "d3-geo": "^1.11.9",
+    "d3-inertia": "^0.1.0",
+    "d3-scale": "^3.2.1",
+    "d3-selection": "^1.4.1",
+    "d3-timer": "^1.0.10",
     "sirv-cli": "^0.4.4",
-    "topojson-client": "^3.1.0"
+    "topojson": "^3.0.2",
+    "versor": "^0.1.2"
   }
 }
