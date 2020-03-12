@@ -101,8 +101,9 @@
               context.globalAlpha = 1;
 
       data.forEach(data => {
-        if (data[active]) {
-          const circle = geoCircle().center([data.Longitude, data.Latitude]).radius(radiusScale(data[active]));
+        const number = parseInt(data[active])
+        if (number) {
+          const circle = geoCircle().center([data.Longitude, data.Latitude]).radius(radiusScale(number));
           context.beginPath(), path(circle()), context.globalAlpha = 0.7,
                   context.fillStyle = colorMap[active], context.fill(), context.globalAlpha = 1;
         }
@@ -158,8 +159,15 @@
 .map {
   cursor: grab;
   position: relative;
-  width: 80vh;
+  width: 100%;
   height: 80vh;
+}
+
+
+@media (max-width: 500px) {
+  .map {
+    height: 60vh;
+  }
 }
 
 .map.drag {
