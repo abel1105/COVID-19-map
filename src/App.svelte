@@ -1,8 +1,9 @@
 <script>
-	import { onMount } from "svelte"
+	import { onMount } from 'svelte';
 	import Map from './Map.svelte';
 	import { csv, json } from 'd3-fetch';
 	import { format } from 'd3-format';
+	import Table from './Table.svelte';
 
 	let active = 'Confirmed';
 	let data = null;
@@ -12,21 +13,21 @@
 	const sum = {};
 
 	const handleClick = (type) => () => {
-		active = type
+		active = type;
 	};
 
 	const sumByType = (data, type) => {
 		return data.reduce((acc, row) => {
-			return parseInt(row[type]) + acc
-		}, 0)
+			return parseInt(row[type]) + acc;
+		}, 0);
 	};
 
-	const formatNumber = format(".3s");
+	const formatNumber = format('.3s');
 
 	onMount(async function () {
 		[world, data] = await Promise.all([
-			json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json"),
-			csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=3549213&single=true&output=csv")
+			json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
+			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=3549213&single=true&output=csv')
 		]);
 
 		sum.Confirmed = formatNumber(sumByType(data, 'Confirmed'));
@@ -34,21 +35,26 @@
 		sum.Recovered = formatNumber(sumByType(data, 'Recovered'));
 		sum.Deaths = formatNumber(sumByType(data, 'Deaths'));
 
-		isInitial = true
-	})
+		isInitial = true;
+	});
 </script>
 
 <main>
 	{#if isInitial}
-		<Map active={active} data={data} world={world} />
-		<div class="label-box">
-			<label class:active={active === 'Confirmed'} on:click={handleClick('Confirmed')}><span style="background: #B00020"></span>總確診({sum.Confirmed})</label>
-			<span>=</span>
-			<label class:active={active === 'Treatment'} on:click={handleClick('Treatment')}><span style="background: #dc8c50"></span>治療中({sum.Treatment})</label>
-			<span>+</span>
-			<label class:active={active === 'Recovered'} on:click={handleClick('Recovered')}><span style="background: #90EE02"></span>復原({sum.Recovered})</label>
-			<span>+</span>
-			<label class:active={active === 'Deaths'} on:click={handleClick('Deaths')}><span style="background: #000"></span>死亡({sum.Deaths})</label>
+		<div class="cut">
+			<Map active={active} data={data} world={world} />
+			<div class="label-box">
+				<label class:active={active === 'Confirmed'} on:click={handleClick('Confirmed')}><span style="background: #B00020"></span>總確診({sum.Confirmed})</label>
+				<span>=</span>
+				<label class:active={active === 'Treatment'} on:click={handleClick('Treatment')}><span style="background: #dc8c50"></span>治療中({sum.Treatment})</label>
+				<span>+</span>
+				<label class:active={active === 'Recovered'} on:click={handleClick('Recovered')}><span style="background: #90EE02"></span>復原({sum.Recovered})</label>
+				<span>+</span>
+				<label class:active={active === 'Deaths'} on:click={handleClick('Deaths')}><span style="background: #000"></span>死亡({sum.Deaths})</label>
+			</div>
+		</div>
+		<div class="cut">
+			<Table />
 		</div>
 	{/if}
 </main>
@@ -58,6 +64,9 @@
 		text-align: center;
 		margin: 0 auto;
 		overflow: hidden;
+	}
+
+	.cut {
 		display: flex;
 		justify-content: center;
 		align-items: center;
