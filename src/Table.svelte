@@ -45,8 +45,7 @@
       }
     }
     if (!updatedTime || (updatedTime && updatedTime < time)) {
-      updatedTime = time
-      console.log(time)
+      updatedTime = time;
     }
     return acc
   }, {});
