@@ -54,6 +54,9 @@
 			</div>
 		</div>
 		<Table data={data} />
+		<div class="copyright">
+			<span>資料來源: <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a> | 製作：<a href="https://github.com/abel1105/COVID-19-map">Abel</a></span>
+		</div>
 	{/if}
 </main>
 
@@ -111,5 +114,15 @@
 
 	.label-box label.active {
 		opacity: 1;
+	}
+
+	.copyright {
+		padding: 40px 0;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.copyright a {
+		text-decoration: underline;
+		color: rgba(255, 255, 255, 0.6);
 	}
 </style>
