@@ -41,10 +41,6 @@
   export let active;
   export let world;
 
-  window.addEventListener('resize', () => {
-    size = getSize()
-  });
-
   onMount(async function() {
     // fix dpi blur problem
     size = getSize() * dpi;

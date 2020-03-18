@@ -53,8 +53,8 @@
 				<label class:active={active === 'Deaths'} on:click={handleClick('Deaths')}><span style="background: #000"></span>死亡({sum.Deaths})</label>
 			</div>
 		</div>
-		<div class="cut">
-			<Table />
+		<div class="detail">
+			<Table data={data} />
 		</div>
 	{/if}
 </main>
@@ -72,6 +72,10 @@
 		align-items: center;
 		flex-direction: column;
 		height: 100vh;
+	}
+
+	.detail {
+		overflow: auto;
 	}
 
 	h1 {
