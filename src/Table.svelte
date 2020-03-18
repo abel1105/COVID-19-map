@@ -63,34 +63,36 @@
   <div class="button" on:click="{toggleFullMode}">
     <i class="material-icons toggle">{fullMode ? "check_box" : "check_box_outline_blank"}</i><span>顯示省/州</span>
   </div>
-  <div class="table" class:full={fullMode}>
-    <div class="cell header"></div>
-    <div class="cell header">國家/區域</div>
-    {#if fullMode}<div class="cell header">省/州</div>{/if}
-    <div class="cell header number confirm">總確診</div>
-    <div class="cell header number treat">治療中</div>
-    <div class="cell header number recover">復原</div>
-    <div class="cell header number death">死亡</div>
-    {#each sortCountry as row, index}
-      <div class="cell" class:taiwan={row.country === '台灣'}>{index + 1}</div>
-      <div class="cell" class:taiwan={row.country === '台灣'}>{row.country}</div>
-      {#if fullMode}<div class="cell" class:taiwan={row.country === '台灣'}></div>{/if}
-      <div class="cell number confirm">{formatter(row.Confirmed)}</div>
-      <div class="cell number treat">{formatter(row.Treatment)}</div>
-      <div class="cell number recover">{formatter(row.Recovered)}</div>
-      <div class="cell number death">{formatter(row.Deaths)}</div>
-      {#if fullMode && row.items.length > 1}
-        {#each row.items as item}
-          <div class="cell"></div>
-          <div class="cell"></div>
-          <div class="cell">{item['Province/State']}</div>
-          <div class="cell number confirm">{formatter(item.Confirmed)}</div>
-          <div class="cell number treat">{formatter(item.Treatment)}</div>
-          <div class="cell number recover">{formatter(item.Recovered)}</div>
-          <div class="cell number death">{formatter(item.Deaths)}</div>
-        {/each}
-      {/if}
-    {/each}
+  <div class="table-wrapper">
+    <div class="table" class:full={fullMode}>
+      <div class="cell header">#</div>
+      <div class="cell header">國家/區域</div>
+      {#if fullMode}<div class="cell header">省/州</div>{/if}
+      <div class="cell header number confirm">總確診</div>
+      <div class="cell header number treat">治療中</div>
+      <div class="cell header number recover">復原</div>
+      <div class="cell header number death">死亡</div>
+      {#each sortCountry as row, index}
+        <div class="cell" class:taiwan={row.country === '台灣'}>{index + 1}</div>
+        <div class="cell" class:taiwan={row.country === '台灣'}>{row.country}</div>
+        {#if fullMode}<div class="cell" class:taiwan={row.country === '台灣'}></div>{/if}
+        <div class="cell number confirm">{formatter(row.Confirmed)}</div>
+        <div class="cell number treat">{formatter(row.Treatment)}</div>
+        <div class="cell number recover">{formatter(row.Recovered)}</div>
+        <div class="cell number death">{formatter(row.Deaths)}</div>
+        {#if fullMode && row.items.length > 1}
+          {#each row.items as item}
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell">{item['Province/State']}</div>
+            <div class="cell number confirm">{formatter(item.Confirmed)}</div>
+            <div class="cell number treat">{formatter(item.Treatment)}</div>
+            <div class="cell number recover">{formatter(item.Recovered)}</div>
+            <div class="cell number death">{formatter(item.Deaths)}</div>
+          {/each}
+        {/if}
+      {/each}
+    </div>
   </div>
 </div>
 
@@ -129,10 +131,6 @@
 .table.full {
   grid-template-columns: 60px repeat(6, minmax(auto, auto));
 }
-.header {
-  color: rgba(255, 255, 255, 0.6);
-  height: 56px;
-}
 .cell {
   padding: 4px 16px;
   height: 52px;
@@ -142,6 +140,12 @@
   align-items: center;
   text-align: left;
 }
+.header {
+  color: rgba(255, 255, 255, 0.6);
+  height: 56px !important;
+  position: sticky;
+  top: 0;
+}
 .taiwan {
   background: rgba(18, 18, 18, 0.5);
 }
@@ -149,20 +153,23 @@
   justify-content: flex-end;
 }
 .confirm {
-  background: rgba(176, 0, 32, 0.1);
+  background: rgb(58, 45, 46);
 }
 .treat {
-  background: rgba(220, 140, 80, 0.1);
+  background: rgb(63, 57, 51);
 }
 .recover {
-  background: rgba(144, 238, 2, 0.1);
+  background: rgb(59, 66, 50);
 }
 .death {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgb(44, 44, 44);
 }
 @media (max-width: 500px) {
   .button {
     display: none;
+  }
+  .table-wrapper {
+    overflow: auto;
   }
 }
 
