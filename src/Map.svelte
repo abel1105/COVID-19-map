@@ -48,7 +48,7 @@
     // console.log(data.colum);
     const land = feature(world, world.objects.countries);
 
-    const projection = geoOrthographic().rotate([-120, -20, 0]).precision(0.1)
+    const projection = geoOrthographic().rotate([-180, -20, 0]).precision(0.1)
             .fitExtent([[5, 5], [size - 5, size - 5]], {type: "Sphere"});
 
     const backProjection = geoProjection((a,b) => geoOrthographicRaw(-a,b))

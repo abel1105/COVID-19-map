@@ -4,10 +4,12 @@
 	import { csv, json } from 'd3-fetch';
 	import { format } from 'd3-format';
 	import Table from './Table.svelte';
+	import Loader from './Loader.svelte';
 
 	let active = 'Confirmed';
-	let data = null;
+	let map = null;
 	let world = null;
+	let table = null;
 	let isInitial = false;
 
 	const sum = {};
@@ -25,15 +27,16 @@
 	const formatNumber = format('.3s');
 
 	onMount(async function () {
-		[world, data] = await Promise.all([
+		[world, map, table] = await Promise.all([
 			json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
-			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=3549213&single=true&output=csv')
+			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=3549213&single=true&output=csv'),
+			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=2096675050&single=true&output=csv'),
 		]);
 
-		sum.Confirmed = formatNumber(sumByType(data, 'Confirmed'));
-		sum.Treatment = formatNumber(sumByType(data, 'Treatment'));
-		sum.Recovered = formatNumber(sumByType(data, 'Recovered'));
-		sum.Deaths = formatNumber(sumByType(data, 'Deaths'));
+		sum.Confirmed = formatNumber(sumByType(table, 'Confirmed'));
+		sum.Treatment = formatNumber(sumByType(table, 'Treatment'));
+		sum.Recovered = formatNumber(sumByType(table, 'Recovered'));
+		sum.Deaths = formatNumber(sumByType(table, 'Deaths'));
 
 		isInitial = true;
 	});
@@ -42,7 +45,7 @@
 <main>
 	{#if isInitial}
 		<div class="cut">
-			<Map active={active} data={data} world={world} />
+			<Map active={active} data={map} world={world} />
 			<div class="label-box">
 				<label class:active={active === 'Confirmed'} on:click={handleClick('Confirmed')}><span style="background: #B00020"></span>總確診({sum.Confirmed})</label>
 				<span>=</span>
@@ -53,10 +56,12 @@
 				<label class:active={active === 'Deaths'} on:click={handleClick('Deaths')}><span style="background: #000"></span>死亡({sum.Deaths})</label>
 			</div>
 		</div>
-		<Table data={data} />
+		<Table data={table} />
 		<div class="copyright">
 			<span>資料來源: <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a> | 製作：<a href="https://github.com/abel1105/COVID-19-map">Abel</a></span>
 		</div>
+	{:else}
+		<Loader />
 	{/if}
 </main>
 

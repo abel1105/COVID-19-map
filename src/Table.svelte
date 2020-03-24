@@ -83,7 +83,7 @@
           {#each row.items as item}
             <div class="cell"></div>
             <div class="cell"></div>
-            <div class="cell">{item['Province/State']}</div>
+            <div class="cell">{item['Province/State'] ? item['Province/State'] : row.country}</div>
             <div class="cell number confirm">{formatter(item.Confirmed)}</div>
             <div class="cell number treat">{formatter(item.Treatment)}</div>
             <div class="cell number recover">{formatter(item.Recovered)}</div>
