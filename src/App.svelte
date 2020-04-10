@@ -3,6 +3,7 @@
 	import Map from './Map.svelte';
 	import { csv, json } from 'd3-fetch';
 	import { format } from 'd3-format';
+	import archieML from 'archieml';
 	import Table from './Table.svelte';
 	import Loader from './Loader.svelte';
 
@@ -10,6 +11,7 @@
 	let map = null;
 	let world = null;
 	let table = null;
+	let text = null;
 	let isInitial = false;
 
 	const sum = {};
@@ -27,10 +29,17 @@
 	const formatNumber = format('.3s');
 
 	onMount(async function () {
-		[world, map, table] = await Promise.all([
+		[world, map, table, text] = await Promise.all([
 			json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
 			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=3549213&single=true&output=csv'),
 			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=2096675050&single=true&output=csv'),
+			new Promise((resolve) => {
+				fetch('https://docs.google.com/document/d/10PahzeKS_O9IaGLsG2vEswhVScHIaZ9uEUDbSMll_Sg/export?format=txt').then(response => {
+					response.text().then(function (text) {
+						resolve(archieML.load(text))
+					})
+				})
+			})
 		]);
 
 		sum.Confirmed = formatNumber(sumByType(table, 'Confirmed'));
@@ -44,22 +53,30 @@
 
 <main>
 	{#if isInitial}
-		<div class="cut">
-			<Map active={active} data={map} world={world} />
-			<div class="label-box">
-				<label class:active={active === 'Confirmed'} on:click={handleClick('Confirmed')}><span style="background: #B00020"></span>總確診({sum.Confirmed})</label>
-				<span>=</span>
-				<label class:active={active === 'Treatment'} on:click={handleClick('Treatment')}><span style="background: #dc8c50"></span>治療中({sum.Treatment})</label>
-				<span>+</span>
-				<label class:active={active === 'Recovered'} on:click={handleClick('Recovered')}><span style="background: #90EE02"></span>復原({sum.Recovered})</label>
-				<span>+</span>
-				<label class:active={active === 'Deaths'} on:click={handleClick('Deaths')}><span style="background: #000"></span>死亡({sum.Deaths})</label>
-			</div>
-		</div>
-		<Table data={table} />
-		<div class="copyright">
-			<span>資料來源: <a href="https://github.com/CSSEGISandData/COVID-19">JHU CSSE</a> | 製作：<a href="https://github.com/abel1105/COVID-19-map">Abel</a></span>
-		</div>
+		{#each text.layout as cut}
+			{#if cut === 'map'}
+				<div class="cut">
+					<Map active={active} data={map} world={world} text={text} />
+					<div class="label-box">
+						<label class:active={active === 'Confirmed'} on:click={handleClick('Confirmed')}><span style="background: #B00020"></span>{text.lang.confirmed}({sum.Confirmed})</label>
+						<span>=</span>
+						<label class:active={active === 'Treatment'} on:click={handleClick('Treatment')}><span style="background: #dc8c50"></span>{text.lang.treatment}({sum.Treatment})</label>
+						<span>+</span>
+						<label class:active={active === 'Recovered'} on:click={handleClick('Recovered')}><span style="background: #90EE02"></span>{text.lang.recovered}({sum.Recovered})</label>
+						<span>+</span>
+						<label class:active={active === 'Deaths'} on:click={handleClick('Deaths')}><span style="background: #000"></span>{text.lang.deaths}({sum.Deaths})</label>
+					</div>
+				</div>
+			{:else if cut === 'table'}
+				<Table data={table} text={text} />
+			{:else if cut === 'footer'}
+				<div class="copyright">
+					{#each text.footers as item}
+						<span>{item.front}<a href="{item.link}">{item.text}</a></span>
+					{/each}
+				</div>
+			{/if}
+		{/each}
 	{:else}
 		<Loader />
 	{/if}
@@ -129,5 +146,9 @@
 	.copyright a {
 		text-decoration: underline;
 		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.copyright span:not(:first-child) {
+		margin-left: 10px;
 	}
 </style>

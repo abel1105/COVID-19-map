@@ -2,6 +2,7 @@
   import { format } from 'd3-format';
 
   export let data;
+  export let text;
 
   let fullMode = false;
 
@@ -62,20 +63,20 @@
 </script>
 
 <div>
-  <h2 class="title">各國統計表</h2>
-  <div class="time">最後更新時間：{renderTime(updatedTime)}</div>
+  <h2 class="title">{text.tableTitle}</h2>
+  <div class="time">{text.updatedTime}{renderTime(updatedTime)}</div>
   <div class="button" on:click="{toggleFullMode}">
-    <i class="material-icons toggle">{fullMode ? "check_box" : "check_box_outline_blank"}</i><span>顯示省/州</span>
+    <i class="material-icons toggle">{fullMode ? "check_box" : "check_box_outline_blank"}</i><span>{text.toggleBtn}</span>
   </div>
   <div class="table-wrapper">
     <div class="table" class:full={fullMode}>
       <div class="cell header">#</div>
-      <div class="cell header">國家/區域</div>
-      {#if fullMode}<div class="cell header">省/州</div>{/if}
-      <div class="cell header number confirm">總確診</div>
-      <div class="cell header number treat">治療中</div>
-      <div class="cell header number recover">復原</div>
-      <div class="cell header number death">死亡</div>
+      <div class="cell header">{text.lang.country}</div>
+      {#if fullMode}<div class="cell header">{text.lang.state}</div>{/if}
+      <div class="cell header number confirm">{text.lang.confirmed}</div>
+      <div class="cell header number treat">{text.lang.treatment}</div>
+      <div class="cell header number recover">{text.lang.recovered}</div>
+      <div class="cell header number death">{text.lang.deaths}</div>
       {#each sortCountry as row, index}
         <div class="cell" class:taiwan={row.country === '台灣'}>{index + 1}</div>
         <div class="cell" class:taiwan={row.country === '台灣'}>{row.country}</div>

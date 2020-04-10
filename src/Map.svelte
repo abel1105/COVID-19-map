@@ -40,6 +40,7 @@
   export let data;
   export let active;
   export let world;
+  export let text;
 
   onMount(async function() {
     // fix dpi blur problem
@@ -82,7 +83,7 @@
               context.fillStyle = '#6002EE', context.fill(); // d0ddfa
 
       context.font = "bold 90pt Oxanium", context.fillStyle = "#000",
-              context.textAlign = "center", context.textBaseline = "middle", context.fillText('COVID-19', size/2, size/2);
+              context.textAlign = "center", context.textBaseline = "middle", context.fillText(text.title, size/2, size/2);
 
       context.beginPath(), backPath(geoGraticule()()),
               context.lineWidth = .1, context.strokeStyle = '#97b3f6', context.stroke(); // 97b3f6
