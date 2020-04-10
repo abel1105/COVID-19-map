@@ -52,8 +52,13 @@
 
   const sortCountry = Object.keys(groupDataByCountry)
     .map(country => groupDataByCountry[country])
-    .sort((a, b) => b.Confirmed - a.Confirmed);
-
+    .sort((a, b) => b.Confirmed - a.Confirmed)
+    .map(country => {
+      return {
+        ...country,
+        items: country.items.sort((a, b) => b.Confirmed - a.Confirmed)
+      }
+    })
 </script>
 
 <div>
