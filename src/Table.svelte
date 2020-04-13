@@ -18,9 +18,10 @@
 
   const groupDataByCountry = data.reduce((acc, row) => {
     const country = row['Country/Region'];
-    const time = +new Date(`${row['Last Update']}Z`);
-    // ignore 0 confirmed country
-    if (!parseInt(row.Confirmed)) {
+    const time = +new Date(`${row['Last Update'].split(' ').join('T')}Z`);
+    // ignore 0 confirmed and 0 recovered country
+    // Canada and US recovered data are separated
+    if (!parseInt(row.Confirmed) && !parseInt(row.Recovered)) {
       return acc
     }
     if (acc[country]) {
