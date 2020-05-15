@@ -83,7 +83,7 @@
         <div class="cell" class:taiwan={row.country === '台灣'}>{row.country}</div>
         {#if fullMode}<div class="cell" class:taiwan={row.country === '台灣'}></div>{/if}
         <div class="cell number confirm">{formatter(row.Confirmed)}</div>
-        <div class="cell number treat">{formatter(row.Treatment)}</div>
+        <div class="cell number treat">{row.Treatment < 0 ? 0 : formatter(row.Treatment)}</div>
         <div class="cell number recover">{formatter(row.Recovered)}</div>
         <div class="cell number death">{formatter(row.Deaths)}</div>
         {#if fullMode && row.items.length > 1}
@@ -92,7 +92,7 @@
             <div class="cell"></div>
             <div class="cell">{item['Province/State'] ? item['Province/State'] : row.country}</div>
             <div class="cell number confirm">{formatter(item.Confirmed)}</div>
-            <div class="cell number treat">{formatter(item.Treatment)}</div>
+            <div class="cell number treat">{item.Treatment < 0 ? 0 : formatter(item.Treatment)}</div>
             <div class="cell number recover">{formatter(item.Recovered)}</div>
             <div class="cell number death">{formatter(item.Deaths)}</div>
           {/each}
