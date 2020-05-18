@@ -99,7 +99,7 @@
 
       data.forEach(data => {
         const number = parseInt(data[active])
-        if (number) {
+        if (number && number > 0) {
           const circle = geoCircle().center([data.Longitude, data.Latitude]).radius(radiusScale(number));
           context.beginPath(), path(circle()), context.globalAlpha = 0.5,
                   context.fillStyle = colorMap[active], context.fill(), context.globalAlpha = 1;
