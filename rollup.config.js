@@ -3,6 +3,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import replace from '@rollup/plugin-replace';
+require('dotenv').config();
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -24,6 +26,15 @@ export default {
 			css: css => {
 				css.write('public/build/bundle.css');
 			}
+		}),
+
+		replace({
+			// 2 level deep object should be stringify
+			process: JSON.stringify({
+				env: {
+					GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
+				}
+			}),
 		}),
 
 		// If you have external dependencies installed from

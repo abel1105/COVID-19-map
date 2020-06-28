@@ -6,6 +6,7 @@
 	import archieML from 'archieml';
 	import Table from './Table.svelte';
 	import Loader from './Loader.svelte';
+	import Papa from 'papaparse';
 
 	let active = 'Confirmed';
 	let map = null;
@@ -28,11 +29,19 @@
 
 	const formatNumber = format('.3s');
 
+	const fetchSheet = ({ id, name }) => {
+		const url = `https://sheets.googleapis.com/v4/spreadsheets/${id}/values/${name}?key=${process.env.GOOGLE_API_KEY}`;
+		return fetch(url).then(response => response.json().then(result => {
+			return Promise.resolve(Papa.parse(Papa.unparse(result.values), { header: true }).data)
+		}))
+	};
+
+
 	onMount(async function () {
 		[world, map, table, text] = await Promise.all([
 			json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
-			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=3549213&single=true&output=csv'),
-			csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRjixGgr6I18VAxY6Ybv26aOeBdfD-NqHU01nnjBR-rpPPs0Jhtgvmaclyo98kG4XXWKiIUyY5vbA3Q/pub?gid=2096675050&single=true&output=csv'),
+			fetchSheet({ id: '17wMAD2zzIP3Arst0naOQ425ibV2YSVcDjyxFHh5bikM', name: 'Export-map' }),
+			fetchSheet({ id: '17wMAD2zzIP3Arst0naOQ425ibV2YSVcDjyxFHh5bikM', name: 'Export-table' }),
 			new Promise((resolve) => {
 				fetch('https://docs.google.com/document/d/10PahzeKS_O9IaGLsG2vEswhVScHIaZ9uEUDbSMll_Sg/export?format=txt').then(response => {
 					response.text().then(function (text) {
