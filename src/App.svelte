@@ -36,19 +36,20 @@
 		}))
 	};
 
+	const fetchDoc = ({ id }) => {
+		const url = `https://www.googleapis.com/drive/v3/files/${id}/export?key=${process.env.GOOGLE_API_KEY}&mimeType=text/plain`
+		return fetch(url).then(response => response.text().then((text) => {
+			return archieML.load(text)
+		}))
+	}
+
 
 	onMount(async function () {
 		[world, map, table, text] = await Promise.all([
 			json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
 			fetchSheet({ id: '17wMAD2zzIP3Arst0naOQ425ibV2YSVcDjyxFHh5bikM', name: 'Export-map' }),
 			fetchSheet({ id: '17wMAD2zzIP3Arst0naOQ425ibV2YSVcDjyxFHh5bikM', name: 'Export-table' }),
-			new Promise((resolve) => {
-				fetch('https://docs.google.com/document/d/10PahzeKS_O9IaGLsG2vEswhVScHIaZ9uEUDbSMll_Sg/export?format=txt').then(response => {
-					response.text().then(function (text) {
-						resolve(archieML.load(text))
-					})
-				})
-			})
+			fetchDoc({ id: '10PahzeKS_O9IaGLsG2vEswhVScHIaZ9uEUDbSMll_Sg' })
 		]);
 
 		sum.Confirmed = formatNumber(sumByType(table, 'Confirmed'));
