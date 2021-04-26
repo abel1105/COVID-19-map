@@ -62,7 +62,7 @@
     const min = 1;
     const max = 100000;
 
-    const radiusScale = scaleRadial().domain([0, 1, max]).range([0, 0.5, 8]);
+    const radiusScale = scaleRadial().domain([0, 1, max]).range([0, 0.5, 3]);
 
     const svg = select('svg');
 
